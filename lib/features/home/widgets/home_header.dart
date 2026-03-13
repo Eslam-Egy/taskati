@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:taskati/core/servicer/shared_pref.dart';
 import 'package:taskati/core/styles/text_styles.dart';
 
@@ -24,8 +23,6 @@ class _HomeHeaderState extends State<HomeHeader> {
   }
 
   Future<void> getUserData() async {
-    final prefs = await SharedPreferences.getInstance();
-
     name = await SharedPrefHelper.getName() ?? "";
     path = await SharedPrefHelper.getImage() ?? "";
 

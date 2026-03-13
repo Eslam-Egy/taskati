@@ -17,156 +17,164 @@ class UploadScreen extends StatefulWidget {
 
 class _UploadScreenState extends State<UploadScreen> {
   String? path;
-  String? name;
+  final TextEditingController nameController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(22.0),
-          child: Column(
-            children: [
-              const Gap(10),
-              const Text("Complete Your Profile"),
-              const Gap(86),
-
-              Row(children: const [Text("Profile Image")]),
-
-              const Gap(21),
-
-              Stack(
-                children: [
-                  CircleAvatar(
-                    radius: 82,
-                    backgroundImage: path != null
-                        ? FileImage(File(path!)) as ImageProvider
-                        : const AssetImage("assets/images/user 1.png"),
-                  ),
-
-                  if (path != null)
-                    Positioned(
-                      bottom: 10,
-                      right: 10,
-                      child: GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            path = null;
-                          });
-                        },
-                        child: CircleAvatar(
-                          radius: 18,
-                          backgroundColor: AppColors.backgroundColor,
-                          child: const Icon(Icons.delete),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-
-              const Gap(40),
-
-              Row(
-                children: [
-                  const Gap(30),
-
-                  GestureDetector(
-                    onTap: () async {
-                      final image = await ImagePicker().pickImage(
-                        source: ImageSource.camera,
-                      );
-
-                      if (image != null) {
-                        setState(() {
-                          path = image.path;
-                        });
-                      }
-                    },
-                    child: ImageContainer(title: "From Camera"),
-                  ),
-
-                  const Gap(10),
-
-                  GestureDetector(
-                    onTap: () async {
-                      final image = await ImagePicker().pickImage(
-                        source: ImageSource.gallery,
-                      );
-
-                      if (image != null) {
-                        setState(() {
-                          path = image.path;
-                        });
-                      }
-                    },
-                    child: ImageContainer(title: "From Gallery"),
-                  ),
-                ],
-              ),
-
-              const Gap(40),
-
-              Row(children: [Text("Your Name", style: TextStyles.caption2)]),
-
-              const Gap(10),
-
-              TextField(
-                decoration: InputDecoration(
-                  hintText: "Enter name",
-                  filled: true,
-                  fillColor: AppColors.backgroundColor,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-                onChanged: (value) {
-                  name = value;
-                },
-              ),
-
-              const Spacer(),
-
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                  ),
-                  onPressed: () async {
-                    if (path == null) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Please select photo")),
-                      );
-                      return;
-                    }
-
-                    if (name == null || name!.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text("Please enter name")),
-                      );
-                      return;
-                    }
-
-                    await SharedPrefHelper.saveName(name!);
-                    await SharedPrefHelper.saveImage(path!);
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const HomeScreen(),
-                      ),
-                    );
-                  },
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(22.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Gap(10),
+                Center(
                   child: Text(
-                    "Let’s Start!",
-                    style: TextStyles.title.copyWith(
-                      color: AppColors.backgroundColor,
+                    "Complete Your Profile",
+                    style: TextStyles.title,
+                  ),
+                ),
+                const Gap(86),
+                Text(
+                  "Profile Image",
+                  style: TextStyles.caption2,
+                ),
+                const Gap(21),
+                Center(
+                  child: Stack(
+                    children: [
+                      CircleAvatar(
+                        radius: 82,
+                        backgroundImage: path != null
+                            ? FileImage(File(path!))
+                            : const AssetImage("assets/images/user 1.png")
+                                as ImageProvider,
+                      ),
+                      if (path != null)
+                        Positioned(
+                          bottom: 10,
+                          right: 10,
+                          child: GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                path = null;
+                              });
+                            },
+                            child: CircleAvatar(
+                              radius: 18,
+                              backgroundColor: AppColors.backgroundColor,
+                              child: const Icon(Icons.delete),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const Gap(40),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        final image = await ImagePicker().pickImage(
+                          source: ImageSource.camera,
+                        );
+
+                        if (image != null) {
+                          setState(() {
+                            path = image.path;
+                          });
+                        }
+                      },
+                      child: const ImageContainer(title: "From Camera"),
+                    ),
+                    const Gap(10),
+                    GestureDetector(
+                      onTap: () async {
+                        final image = await ImagePicker().pickImage(
+                          source: ImageSource.gallery,
+                        );
+
+                        if (image != null) {
+                          setState(() {
+                            path = image.path;
+                          });
+                        }
+                      },
+                      child: const ImageContainer(title: "From Gallery"),
+                    ),
+                  ],
+                ),
+                const Gap(40),
+                Text(
+                  "Your Name",
+                  style: TextStyles.caption2,
+                ),
+                const Gap(10),
+                TextField(
+                  controller: nameController,
+                  decoration: InputDecoration(
+                    hintText: "Enter name",
+                    filled: true,
+                    fillColor: AppColors.backgroundColor,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      borderSide: BorderSide.none,
                     ),
                   ),
                 ),
-              ),
-            ],
+                const Gap(40),
+                SizedBox(
+                  width: double.infinity,
+                  height: 55,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primaryColor,
+                    ),
+                    onPressed: () async {
+                      if (path == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please select photo"),
+                          ),
+                        );
+                        return;
+                      }
+
+                      if (nameController.text.isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Please enter name"),
+                          ),
+                        );
+                        return;
+                      }
+
+                      await SharedPrefHelper.saveName(nameController.text);
+                      await SharedPrefHelper.saveImage(path!);
+
+                      if (!context.mounted) return;
+
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HomeScreen(),
+                        ),
+                      );
+                    },
+                    child: Text(
+                      "Let’s Start!",
+                      style: TextStyles.title.copyWith(
+                        color: AppColors.backgroundColor,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -191,7 +199,9 @@ class ImageContainer extends StatelessWidget {
       child: Center(
         child: Text(
           title,
-          style: TextStyles.caption1.copyWith(color: AppColors.primaryColor),
+          style: TextStyles.caption1.copyWith(
+            color: AppColors.primaryColor,
+          ),
         ),
       ),
     );

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+
+import 'package:taskati/core/function/navigation.dart';
 import 'package:taskati/core/styles/app_colors.dart';
-import 'package:taskati/core/styles/text_styles.dart';
 import 'package:taskati/features/home/widgets/daily__progress.dart';
 import 'package:taskati/features/home/widgets/home_date_picer.dart';
 import 'package:taskati/features/home/widgets/home_header.dart';
 import 'package:taskati/features/home/widgets/task_builder.dart';
+import 'package:taskati/features/task/page/add_tesk_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -22,18 +24,19 @@ class HomeScreen extends StatelessWidget {
               children: [
                 const HomeHeader(),
                 const Gap(24),
-                const Daily_Progress(),
+                const DailyProgress(),
                 const Gap(24),
                 const HomeDatePicer(),
                 const Gap(32),
-
-                TaskBuilder(),
+                Expanded(child: TaskBuilder()),
               ],
             ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            pushto(context, AddTaskScreen());
+          },
           backgroundColor: AppColors.primaryColor,
           child: Icon(Icons.add, color: AppColors.backgroundColor),
         ),

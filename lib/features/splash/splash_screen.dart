@@ -32,6 +32,8 @@ class _SplashScreenState extends State<SplashScreen> {
 
     await Future.delayed(const Duration(seconds: 4));
 
+    if (!mounted) return;
+
     if (name != null && image != null) {
       pushReplacment(context, const HomeScreen());
     } else {

@@ -5,8 +5,8 @@ import 'package:percent_indicator/circular_percent_indicator.dart';
 import 'package:taskati/core/styles/app_colors.dart';
 import 'package:taskati/core/styles/text_styles.dart';
 
-class Daily_Progress extends StatelessWidget {
-  const Daily_Progress({super.key});
+class DailyProgress extends StatelessWidget {
+  const DailyProgress({super.key});
 
   @override
   Widget build(BuildContext context) {

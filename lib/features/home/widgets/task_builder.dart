@@ -14,11 +14,10 @@ class TaskBuilder extends StatefulWidget {
 class _TaskBuilderState extends State<TaskBuilder> {
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Column(
-        children: [
-          ButtonsTabBar(
-            backgroundColor: AppColors.primaryColor,
+    return Column(
+      children: [
+        ButtonsTabBar(
+          backgroundColor: AppColors.primaryColor,
             unselectedBackgroundColor: const Color(0xffEDE7F6),
 
             unselectedLabelStyle: TextStyles.caption1.copyWith(
@@ -48,8 +47,7 @@ class _TaskBuilderState extends State<TaskBuilder> {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 }
 
