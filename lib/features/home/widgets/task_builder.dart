@@ -1,6 +1,9 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:hive_ce_flutter/adapters.dart';
+import 'package:taskati/core/models/task_model.dart';
 import 'package:taskati/core/styles/app_colors.dart';
 import 'package:taskati/core/styles/text_styles.dart';
 
@@ -14,25 +17,21 @@ class TaskBuilder extends StatefulWidget {
 class _TaskBuilderState extends State<TaskBuilder> {
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ButtonsTabBar(
-          backgroundColor: AppColors.primaryColor,
+    return DefaultTabController(
+      length: 3,
+      child: Column(
+        children: [
+          ButtonsTabBar(
+            backgroundColor: AppColors.primaryColor,
             unselectedBackgroundColor: const Color(0xffEDE7F6),
-
             unselectedLabelStyle: TextStyles.caption1.copyWith(
               color: AppColors.primaryColor,
             ),
-
             labelStyle: TextStyles.caption1.copyWith(color: Colors.white),
-
             radius: 12,
             height: 45,
-
             contentPadding: const EdgeInsets.symmetric(horizontal: 20),
-
             buttonMargin: const EdgeInsets.symmetric(horizontal: 8),
-
             tabs: const [
               Tab(text: "All"),
               Tab(text: "In Progress"),
@@ -40,88 +39,125 @@ class _TaskBuilderState extends State<TaskBuilder> {
             ],
           ),
           const Gap(20),
-
           Expanded(
             child: TabBarView(
-              children: [TasksListView(), TasksListView(), TasksListView()],
+              children: [
+                TasksListView(filter: "all"),
+                TasksListView(filter: "progress"),
+                TasksListView(filter: "completed"),
+              ],
             ),
           ),
         ],
-      );
+      ),
+    );
   }
 }
 
 class TasksListView extends StatelessWidget {
-  const TasksListView({super.key});
+  final String filter;
+
+  const TasksListView({super.key, required this.filter});
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 5,
-      itemBuilder: (context, index) {
-        return Container(
-          margin: const EdgeInsets.only(bottom: 16),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: Colors.white,
-            boxShadow: [BoxShadow(blurRadius: 6, color: Colors.black12)],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Title Of Task", style: TextStyles.title),
+    final Box<TaskModel> box = Hive.box<TaskModel>('tasks');
 
-              const Gap(6),
+    return ValueListenableBuilder(
+      valueListenable: box.listenable(),
+      builder: (context, Box<TaskModel> box, _) {
+        List<TaskModel> tasks = box.values.toList();
 
-              Text(
-                "Description Of Task",
-                style: TextStyles.caption1.copyWith(
-                  color: AppColors.secondaryColor,
-                ),
+        /// ✅ فلترة
+        if (filter == "progress") {
+          tasks = tasks.where((e) => !e.isCompleted).toList();
+        } else if (filter == "completed") {
+          tasks = tasks.where((e) => e.isCompleted).toList();
+        }
+
+        if (tasks.isEmpty) {
+          return const Center(
+            child: Text("No Tasks Yet 😴"),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: tasks.length,
+          itemBuilder: (context, index) {
+            final task = tasks[index];
+
+            return Container(
+              margin: const EdgeInsets.only(bottom: 16),
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.white,
+                boxShadow: const [
+                  BoxShadow(color: Colors.black12, blurRadius: 6),
+                ],
               ),
-
-              const Gap(8),
-
-              Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.asset(
-                    "assets/images/Time Circle.png",
-                    width: 20,
-                    height: 20,
-                  ),
+                  /// Title
+                  Text(task.title ?? "", style: TextStyles.title),
 
-                  const Gap(6),
+                  const SizedBox(height: 6),
 
-                  Text(
-                    "10:00 AM - 12:00 PM",
-                    style: TextStyles.caption2.copyWith(
-                      color: AppColors.secondaryColor,
-                    ),
-                  ),
+                  /// Description
+                  Text(task.description ?? ""),
 
-                  const Spacer(),
+                  const SizedBox(height: 8),
 
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10),
-                      color: AppColors.accentColor,
-                    ),
-                    child: Text(
-                      "In Progress",
-                      style: TextStyles.caption2.copyWith(
-                        color: AppColors.primaryColor,
+                  /// Time
+                  Text("${task.startTime} - ${task.endTime}"),
+
+                  const SizedBox(height: 10),
+
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          color: task.isCompleted
+                              ? Colors.green.shade100
+                              : Colors.orange.shade100,
+                        ),
+                        child: Text(
+                          task.isCompleted ? "Completed" : "In Progress",
+                          style: TextStyles.caption2,
+                        ),
                       ),
-                    ),
+
+                      const Spacer(),
+
+                      /// ✅ تغيير الحالة
+                      IconButton(
+                        icon:
+                            const Icon(Icons.check_circle, color: Colors.green),
+                        onPressed: () {
+                          task.isCompleted = !task.isCompleted;
+                          task.save();
+                        },
+                      ),
+
+                      /// 🗑 حذف
+                      IconButton(
+                        icon: const Icon(Icons.delete, color: Colors.red),
+                        onPressed: () {
+                          task.delete();
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-            ],
-          ),
+            );
+          },
         );
       },
     );

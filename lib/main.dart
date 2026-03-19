@@ -1,24 +1,29 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive_ce_flutter/hive_ce_flutter.dart';
-
+import 'package:taskati/core/models/task_model.dart';
 import 'package:taskati/core/servicer/hive_helper.dart';
 import 'package:taskati/core/servicer/shared_pref.dart';
 import 'package:taskati/core/styles/app_colors.dart';
 import 'package:taskati/core/styles/themes.dart';
 import 'package:taskati/features/splash/splash_screen.dart';
-import 'package:taskati/hive/hive_registrar.g.dart';
+import 'package:taskati/hive/hive_adapters.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  /// Shared Pref
   await SharedPrefHelper.init();
 
+  /// Hive
   await Hive.initFlutter();
 
-  Hive.registerAdapters(); // تسجيل adapters
-
+  /// Register Adapter
+  Hive.registerAdapter(TaskModelAdapter());
   await HiveHelper.init();
+
+  /// Open Box
+  await Hive.openBox<TaskModel>('tasks');
 
   runApp(const MyApp());
 }

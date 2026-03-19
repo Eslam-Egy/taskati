@@ -1,11 +1,14 @@
-class TaskModel {
+import 'package:hive_ce/hive.dart';
+
+class TaskModel extends HiveObject {
+  // ✅ مهم جدًا
   String? id;
   String? title;
   String? description;
   String? date;
   String? startTime;
   String? endTime;
-  bool? isCompleted;
+  bool isCompleted;
   String? createdAt;
 
   TaskModel({
@@ -15,7 +18,7 @@ class TaskModel {
     this.date,
     this.startTime,
     this.endTime,
-    this.isCompleted,
+    this.isCompleted = false,
     this.createdAt,
   });
 }

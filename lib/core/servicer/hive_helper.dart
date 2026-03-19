@@ -2,7 +2,6 @@ import 'package:hive_ce/hive.dart';
 import 'package:taskati/core/models/task_model.dart';
 
 class HiveHelper {
-
   static late Box userBox;
   static late Box<TaskModel> tasksBox;
 
@@ -45,5 +44,4 @@ class HiveHelper {
   static List<TaskModel> getAllTasks() {
     return tasksBox.values.toList();
   }
-
 }
