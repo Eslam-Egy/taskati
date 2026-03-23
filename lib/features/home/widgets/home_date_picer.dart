@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:taskati/core/styles/app_colors.dart';
 
 class HomeDatePicer extends StatefulWidget {
-  const HomeDatePicer({super.key});
+  final Function(DateTime) onDateSelected;
+
+  const HomeDatePicer({super.key, required this.onDateSelected});
 
   @override
   State<HomeDatePicer> createState() => _HomeDatePicerState();
@@ -11,6 +13,7 @@ class HomeDatePicer extends StatefulWidget {
 
 class _HomeDatePicerState extends State<HomeDatePicer> {
   final DatePickerController _controller = DatePickerController();
+  DateTime selectedDate = DateTime.now();
 
   @override
   void initState() {
@@ -32,7 +35,13 @@ class _HomeDatePicerState extends State<HomeDatePicer> {
       selectedTextColor: Colors.white,
       calendarType: CalendarType.gregorianDate,
       controller: _controller,
-      onDateChange: (date) {},
+      onDateChange: (date) {
+  setState(() {
+    selectedDate = date;
+  });
+
+  widget.onDateSelected(date); 
+},
     );
   }
 }

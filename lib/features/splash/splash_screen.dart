@@ -11,7 +11,9 @@ import 'package:taskati/features/home/page/home_screen.dart';
 import 'package:taskati/features/splash/upload/page/upload_screen.dart';
 
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({super.key});
+  final VoidCallback toggleTheme;
+
+  const SplashScreen({super.key, required this.toggleTheme});
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -24,23 +26,25 @@ class _SplashScreenState extends State<SplashScreen> {
     checkUser();
   }
 
-  Future<void> checkUser() async {
-    final prefs = await SharedPreferences.getInstance();
+Future<void> checkUser() async {
+  final prefs = await SharedPreferences.getInstance();
 
-    String? name = prefs.getString('name');
-    String? image = prefs.getString('image');
+  String? name = prefs.getString('name');
+  String? image = prefs.getString('image');
 
-    await Future.delayed(const Duration(seconds: 4));
+  await Future.delayed(const Duration(seconds: 4));
 
-    if (!mounted) return;
+  if (!mounted) return;
 
-    if (name != null && image != null) {
-      pushReplacment(context, const HomeScreen());
-    } else {
-      pushReplacment(context, const UploadScreen());
-    }
+  if (name != null && image != null) {
+    pushReplacment(
+      context,
+      HomeScreen(toggleTheme: widget.toggleTheme),
+    );
+  } else {
+    pushReplacment(context, const UploadScreen());
   }
-
+} // ✅ دي كانت ناقصة
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -161,7 +161,7 @@ class _UploadScreenState extends State<UploadScreen> {
                       Navigator.pushReplacement(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const HomeScreen(),
+                          builder: (context) => HomeScreen(toggleTheme: () {}),
                         ),
                       );
                     },

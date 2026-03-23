@@ -1,20 +1,17 @@
 import 'package:buttons_tabbar/buttons_tabbar.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:hive_ce_flutter/adapters.dart';
+import 'package:intl/intl.dart';
 import 'package:taskati/core/models/task_model.dart';
 import 'package:taskati/core/styles/app_colors.dart';
 import 'package:taskati/core/styles/text_styles.dart';
 
-class TaskBuilder extends StatefulWidget {
-  const TaskBuilder({super.key});
+class TaskBuilder extends StatelessWidget {
+  final DateTime selectedDate;
 
-  @override
-  State<TaskBuilder> createState() => _TaskBuilderState();
-}
+  const TaskBuilder({super.key, required this.selectedDate});
 
-class _TaskBuilderState extends State<TaskBuilder> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -42,9 +39,18 @@ class _TaskBuilderState extends State<TaskBuilder> {
           Expanded(
             child: TabBarView(
               children: [
-                TasksListView(filter: "all"),
-                TasksListView(filter: "progress"),
-                TasksListView(filter: "completed"),
+                TasksListView(
+                  filter: "all",
+                  selectedDate: selectedDate,
+                ),
+                TasksListView(
+                  filter: "progress",
+                  selectedDate: selectedDate,
+                ),
+                TasksListView(
+                  filter: "completed",
+                  selectedDate: selectedDate,
+                ),
               ],
             ),
           ),
@@ -56,8 +62,13 @@ class _TaskBuilderState extends State<TaskBuilder> {
 
 class TasksListView extends StatelessWidget {
   final String filter;
+  final DateTime selectedDate;
 
-  const TasksListView({super.key, required this.filter});
+  const TasksListView({
+    super.key,
+    required this.filter,
+    required this.selectedDate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -66,9 +77,14 @@ class TasksListView extends StatelessWidget {
     return ValueListenableBuilder(
       valueListenable: box.listenable(),
       builder: (context, Box<TaskModel> box, _) {
-        List<TaskModel> tasks = box.values.toList();
+        final selectedDateString =
+            DateFormat("dd MMM, yyyy").format(selectedDate);
 
-        /// ✅ فلترة
+        List<TaskModel> tasks = box.values
+            .where((task) => task.date == selectedDateString)
+            .toList();
+
+        /// ✅ فلترة بالحالة + التاريخ
         if (filter == "progress") {
           tasks = tasks.where((e) => !e.isCompleted).toList();
         } else if (filter == "completed") {
@@ -77,7 +93,7 @@ class TasksListView extends StatelessWidget {
 
         if (tasks.isEmpty) {
           return const Center(
-            child: Text("No Tasks Yet 😴"),
+            child: Text("No Tasks For This Day 😴"),
           );
         }
 
@@ -86,12 +102,14 @@ class TasksListView extends StatelessWidget {
           itemBuilder: (context, index) {
             final task = tasks[index];
 
+            final isDark = Theme.of(context).brightness == Brightness.dark;
+
             return Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
-                color: Colors.white,
+                color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 boxShadow: const [
                   BoxShadow(color: Colors.black12, blurRadius: 6),
                 ],
@@ -135,7 +153,7 @@ class TasksListView extends StatelessWidget {
 
                       const Spacer(),
 
-                      /// ✅ تغيير الحالة
+                      /// ✅ Complete
                       IconButton(
                         icon:
                             const Icon(Icons.check_circle, color: Colors.green),
@@ -145,7 +163,7 @@ class TasksListView extends StatelessWidget {
                         },
                       ),
 
-                      /// 🗑 حذف
+                      /// 🗑 Delete
                       IconButton(
                         icon: const Icon(Icons.delete, color: Colors.red),
                         onPressed: () {
