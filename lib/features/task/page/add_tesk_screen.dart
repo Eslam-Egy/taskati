@@ -46,175 +46,188 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(22),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Gap(30),
-
-              /// Title
-              Text("Title",
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minHeight: MediaQuery.of(context).size.height -
+                    MediaQuery.of(context).padding.top -
+                    kToolbarHeight -
+                    44,
               ),
-              const Gap(8),
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
+              child: IntrinsicHeight(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Gap(30),
 
-              const Gap(20),
-
-              /// Description
-              Text("Description",
-                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
-              ),
-              const Gap(8),
-              TextField(
-                controller: descriptionController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  filled: true,
-                  fillColor: Theme.of(context).brightness == Brightness.dark
-                      ? const Color(0xFF1E1E1E)
-                      : Colors.white,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-
-              const Gap(40),
-
-              /// Date
-              ResContainer(
-                onTap: () async {
-                  DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2030),
-                  );
-
-                  if (picked != null) {
-                    setState(() {
-                      selectedDate = picked;
-                    });
-                  }
-                },
-                icon: SvgPicture.asset("assets/images/calendar.svg", width: 24),
-                title: "Date",
-                value: DateFormat("dd MMM, yyyy").format(selectedDate),
-              ),
-
-              const Gap(24),
-
-              /// Start Time
-              ResContainer(
-                onTap: () async {
-                  TimeOfDay? picked = await showTimePicker(
-                    context: context,
-                    initialTime: startTime,
-                  );
-
-                  if (picked != null) {
-                    setState(() {
-                      startTime = picked;
-                    });
-                  }
-                },
-                icon: SvgPicture.asset(
-                  "assets/images/Time Circle.svg",
-                  width: 24,
-                ),
-                title: "Start Time",
-                value: startTime.format(context),
-              ),
-
-              const Gap(24),
-
-              /// End Time
-              ResContainer(
-                onTap: () async {
-                  TimeOfDay? picked = await showTimePicker(
-                    context: context,
-                    initialTime: endTime,
-                  );
-
-                  if (picked != null) {
-                    setState(() {
-                      endTime = picked;
-                    });
-                  }
-                },
-                icon: SvgPicture.asset(
-                  "assets/images/Time Circle.svg",
-                  width: 24,
-                ),
-                title: "End Time",
-                value: endTime.format(context),
-              ),
-
-              const Spacer(),
-
-              /// Add Task Button
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (titleController.text.isEmpty) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Please enter task title"),
+                    /// Title
+                    Text("Title",
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                    const Gap(8),
+                    TextField(
+                      controller: titleController,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF1E1E1E)
+                            : Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
                         ),
-                      );
-                      return;
-                    }
-
-                    /// create unique key
-                    final String key =
-                        DateTime.now().millisecondsSinceEpoch.toString();
-
-                    HiveHelper.cacheTask(
-                      key,
-                      TaskModel(
-                        id: key,
-                        title: titleController.text,
-                        description: descriptionController.text,
-                        date: DateFormat("dd MMM, yyyy").format(selectedDate),
-                        startTime: startTime.format(context),
-                        endTime: endTime.format(context),
-                        isCompleted: false,
-                        createdAt: DateTime.now().toIso8601String(),
                       ),
-                    );
-                    Navigator.pop(context);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primaryColor,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
                     ),
-                  ),
-                  child: Text(
-                    "Add Task",
-                    style: TextStyles.headline.copyWith(
-                      color: AppColors.backgroundColor,
-                      fontWeight: FontWeight.w600,
+
+                    const Gap(20),
+
+                    /// Description
+                    Text("Description",
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
                     ),
-                  ),
+                    const Gap(8),
+                    TextField(
+                      controller: descriptionController,
+                      maxLines: 3,
+                      decoration: InputDecoration(
+                        filled: true,
+                        fillColor: Theme.of(context).brightness == Brightness.dark
+                            ? const Color(0xFF1E1E1E)
+                            : Colors.white,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                          borderSide: BorderSide.none,
+                        ),
+                      ),
+                    ),
+
+                    const Gap(40),
+
+                    /// Date
+                    ResContainer(
+                      onTap: () async {
+                        DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2030),
+                        );
+
+                        if (picked != null) {
+                          setState(() {
+                            selectedDate = picked;
+                          });
+                        }
+                      },
+                      icon: SvgPicture.asset("assets/images/calendar.svg", width: 24),
+                      title: "Date",
+                      value: DateFormat("dd MMM, yyyy").format(selectedDate),
+                    ),
+
+                    const Gap(24),
+
+                    /// Start Time
+                    ResContainer(
+                      onTap: () async {
+                        TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: startTime,
+                        );
+
+                        if (picked != null) {
+                          setState(() {
+                            startTime = picked;
+                          });
+                        }
+                      },
+                      icon: SvgPicture.asset(
+                        "assets/images/Time Circle.svg",
+                        width: 24,
+                      ),
+                      title: "Start Time",
+                      value: startTime.format(context),
+                    ),
+
+                    const Gap(24),
+
+                    /// End Time
+                    ResContainer(
+                      onTap: () async {
+                        TimeOfDay? picked = await showTimePicker(
+                          context: context,
+                          initialTime: endTime,
+                        );
+
+                        if (picked != null) {
+                          setState(() {
+                            endTime = picked;
+                          });
+                        }
+                      },
+                      icon: SvgPicture.asset(
+                        "assets/images/Time Circle.svg",
+                        width: 24,
+                      ),
+                      title: "End Time",
+                      value: endTime.format(context),
+                    ),
+
+                    const Spacer(),
+                    const Gap(40),
+
+                    /// Add Task Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 55,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          if (titleController.text.isEmpty) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Please enter task title"),
+                              ),
+                            );
+                            return;
+                          }
+
+                          /// create unique key
+                          final String key =
+                              DateTime.now().millisecondsSinceEpoch.toString();
+
+                          HiveHelper.cacheTask(
+                            key,
+                            TaskModel(
+                              id: key,
+                              title: titleController.text,
+                              description: descriptionController.text,
+                              date: DateFormat("dd MMM, yyyy").format(selectedDate),
+                              startTime: startTime.format(context),
+                              endTime: endTime.format(context),
+                              isCompleted: false,
+                              createdAt: DateTime.now().toIso8601String(),
+                            ),
+                          );
+                          Navigator.pop(context);
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppColors.primaryColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(14),
+                          ),
+                        ),
+                        child: Text(
+                          "Add Task",
+                          style: TextStyles.headline.copyWith(
+                            color: AppColors.backgroundColor,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-            ],
+            ),
           ),
         ),
       ),

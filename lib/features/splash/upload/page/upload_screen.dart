@@ -80,34 +80,38 @@ class _UploadScreenState extends State<UploadScreen> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    GestureDetector(
-                      onTap: () async {
-                        final image = await ImagePicker().pickImage(
-                          source: ImageSource.camera,
-                        );
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          final image = await ImagePicker().pickImage(
+                            source: ImageSource.camera,
+                          );
 
-                        if (image != null) {
-                          setState(() {
-                            path = image.path;
-                          });
-                        }
-                      },
-                      child: const ImageContainer(title: "From Camera"),
+                          if (image != null) {
+                            setState(() {
+                              path = image.path;
+                            });
+                          }
+                        },
+                        child: const ImageContainer(title: "From Camera"),
+                      ),
                     ),
                     const Gap(10),
-                    GestureDetector(
-                      onTap: () async {
-                        final image = await ImagePicker().pickImage(
-                          source: ImageSource.gallery,
-                        );
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () async {
+                          final image = await ImagePicker().pickImage(
+                            source: ImageSource.gallery,
+                          );
 
-                        if (image != null) {
-                          setState(() {
-                            path = image.path;
-                          });
-                        }
-                      },
-                      child: const ImageContainer(title: "From Gallery"),
+                          if (image != null) {
+                            setState(() {
+                              path = image.path;
+                            });
+                          }
+                        },
+                        child: const ImageContainer(title: "From Gallery"),
+                      ),
                     ),
                   ],
                 ),
@@ -195,7 +199,7 @@ class ImageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 126,
+      width: double.infinity,
       height: 35,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),

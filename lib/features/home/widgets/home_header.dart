@@ -35,17 +35,24 @@ class _HomeHeaderState extends State<HomeHeader> {
       children: [
         ClipOval(
           child: path.isEmpty
-              ? Image.asset("assets/images/user 1.png", height: 50, width: 50)
-              : Image.file(File(path), height: 50, width: 50),
+              ? Image.asset("assets/images/user 1.png", height: 50, width: 50, fit: BoxFit.cover)
+              : Image.file(File(path), height: 50, width: 50, fit: BoxFit.cover),
         ),
         const Gap(12),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text("Hello!", style: TextStyles.caption1),
-            const Gap(4),
-            Text(name, style: TextStyles.title),
-          ],
+        Flexible(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Hello!", style: TextStyles.caption1),
+              const Gap(4),
+              Text(
+                name,
+                style: TextStyles.title,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ],
+          ),
         ),
       ],
     );

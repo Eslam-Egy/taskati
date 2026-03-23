@@ -24,11 +24,15 @@ class DailyProgress extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    Text(
-                      DateFormat("EEEE,dd MMM yyyy").format(DateTime.now()),
-                      style: TextStyles.caption1.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.backgroundColor,
+                    Flexible(
+                      child: Text(
+                        DateFormat("EEEE,dd MMM yyyy").format(DateTime.now()),
+                        style: TextStyles.caption1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.backgroundColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],
@@ -36,11 +40,15 @@ class DailyProgress extends StatelessWidget {
                 Gap(13),
                 Row(
                   children: [
-                    Text(
-                      "Your today’s task almost almost",
-                      style: TextStyles.caption1.copyWith(
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.backgroundColor,
+                    Flexible(
+                      child: Text(
+                        "Your today's task almost done",
+                        style: TextStyles.caption1.copyWith(
+                          fontWeight: FontWeight.w700,
+                          color: AppColors.backgroundColor,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     ),
                   ],

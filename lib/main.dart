@@ -52,7 +52,7 @@ class _MyAppState extends State<MyApp> {
 
       theme: AppThemes.lightTheme,
       darkTheme: AppThemes.darkTheme,
-      themeMode: themeMode, // 🔥 أهم سطر
+      themeMode: themeMode,
 
       builder: (context, child) {
         return SafeArea(

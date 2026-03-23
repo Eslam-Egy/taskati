@@ -44,7 +44,7 @@ Future<void> checkUser() async {
   } else {
     pushReplacment(context, const UploadScreen());
   }
-} // ✅ دي كانت ناقصة
+}
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,8 +53,13 @@ Future<void> checkUser() async {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            LottieBuilder.asset(AppAssets.logoJson),
-            Gap(12),
+            LottieBuilder.asset(
+              AppAssets.logoJson,
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: MediaQuery.of(context).size.width * 0.5,
+              fit: BoxFit.contain,
+            ),
+            const Gap(12),
             Text(
               "Taskati",
               style: TextStyles.headline.copyWith(

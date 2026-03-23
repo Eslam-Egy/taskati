@@ -86,7 +86,7 @@ class TasksListView extends StatelessWidget {
             .where((task) => task.date == selectedDateString)
             .toList();
 
-        /// ✅ فلترة بالحالة + التاريخ
+        /// Filter by status + date
         if (filter == "progress") {
           tasks = tasks.where((e) => !e.isCompleted).toList();
         } else if (filter == "completed") {
