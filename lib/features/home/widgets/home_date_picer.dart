@@ -26,6 +26,7 @@ class _HomeDatePicerState extends State<HomeDatePicer> {
 
   @override
   Widget build(BuildContext context) {
+    final textColor = Theme.of(context).colorScheme.onSurface;
     return DatePicker(
       DateTime.now().subtract(const Duration(days: 30)),
       height: 90,
@@ -33,6 +34,9 @@ class _HomeDatePicerState extends State<HomeDatePicer> {
       initialSelectedDate: DateTime.now(),
       selectionColor: AppColors.primaryColor,
       selectedTextColor: Colors.white,
+      dayTextStyle: TextStyle(fontSize: 12, color: textColor),
+      monthTextStyle: TextStyle(fontSize: 12, color: textColor),
+      dateTextStyle: TextStyle(fontSize: 18, color: textColor),
       calendarType: CalendarType.gregorianDate,
       controller: _controller,
       onDateChange: (date) {

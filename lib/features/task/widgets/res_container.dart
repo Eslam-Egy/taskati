@@ -18,13 +18,14 @@ class ResContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return GestureDetector(
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(16),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          color: Colors.white,
+          color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         ),
         child: Row(
           children: [
@@ -38,13 +39,13 @@ class ResContainer extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyles.caption1.copyWith(
-                    color: AppColors.secondaryColor,
+                    color: isDark ? Colors.grey : AppColors.secondaryColor,
                   ),
                 ),
                 Text(
                   value,
                   style: TextStyles.title.copyWith(
-                    color: AppColors.blackColor,
+                    color: Theme.of(context).colorScheme.onSurface,
                     fontSize: 18,
                   ),
                 ),

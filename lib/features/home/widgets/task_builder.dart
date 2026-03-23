@@ -14,13 +14,15 @@ class TaskBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return DefaultTabController(
       length: 3,
       child: Column(
         children: [
           ButtonsTabBar(
             backgroundColor: AppColors.primaryColor,
-            unselectedBackgroundColor: const Color(0xffEDE7F6),
+            unselectedBackgroundColor:
+                isDark ? const Color(0xFF2A2A2A) : const Color(0xffEDE7F6),
             unselectedLabelStyle: TextStyles.caption1.copyWith(
               color: AppColors.primaryColor,
             ),

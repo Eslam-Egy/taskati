@@ -64,7 +64,9 @@ class _MyAppState extends State<MyApp> {
                 Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: AppColors.backgroundColor,
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF121212)
+                      : AppColors.backgroundColor,
                 ),
                 Image.asset(
                   "assets/images/Group 1.png",

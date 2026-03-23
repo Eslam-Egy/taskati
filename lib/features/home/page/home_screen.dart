@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
-import 'package:intl/intl.dart';
 
 import 'package:taskati/core/function/navigation.dart';
 import 'package:taskati/core/styles/app_colors.dart';
@@ -20,72 +19,64 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
-  
   DateTime selectedDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 3,
-      child: Scaffold(
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: widget.toggleTheme,
+            icon: const Icon(Icons.dark_mode),
+          ),
+        ],
+      ),
 
-        appBar: AppBar(
-          actions: [
-            IconButton(
-              onPressed: widget.toggleTheme,
-              icon: const Icon(Icons.dark_mode),
-            ),
-          ],
-        ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(22.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Header
+              const HomeHeader(),
 
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(22.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
+              const Gap(24),
 
-                /// Header
-                const HomeHeader(),
+              /// Progress
+              const DailyProgress(),
 
-                const Gap(24),
+              const Gap(24),
 
-                /// Progress
-                const DailyProgress(),
+              /// 🔥 Date Picker
+              HomeDatePicer(
+                onDateSelected: (date) {
+                  setState(() {
+                    selectedDate = date;
+                  });
+                },
+              ),
 
-                const Gap(24),
+              const Gap(32),
 
-                /// 🔥 Date Picker
-                HomeDatePicer(
-                  onDateSelected: (date) {
-                    setState(() {
-                      selectedDate = date;
-                    });
-                  },
+              Expanded(
+                child: TaskBuilder(
+                  selectedDate: selectedDate,
                 ),
-
-                const Gap(32),
-
-                
-                Expanded(
-                  child: TaskBuilder(
-                    selectedDate: selectedDate,
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
+      ),
 
-        /// ➕ Add Task
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            pushto(context, AddTaskScreen());
-          },
-          backgroundColor: AppColors.primaryColor,
-          child: Icon(Icons.add, color: AppColors.backgroundColor),
-        ),
+      /// ➕ Add Task
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          pushto(context, AddTaskScreen(initialDate: selectedDate));
+        },
+        backgroundColor: AppColors.primaryColor,
+        child: Icon(Icons.add, color: AppColors.backgroundColor),
       ),
     );
   }

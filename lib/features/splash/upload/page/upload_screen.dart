@@ -65,7 +65,10 @@ class _UploadScreenState extends State<UploadScreen> {
                             },
                             child: CircleAvatar(
                               radius: 18,
-                              backgroundColor: AppColors.backgroundColor,
+                              backgroundColor:
+                                  Theme.of(context).brightness == Brightness.dark
+                                      ? const Color(0xFF2A2A2A)
+                                      : AppColors.backgroundColor,
                               child: const Icon(Icons.delete),
                             ),
                           ),
@@ -119,7 +122,9 @@ class _UploadScreenState extends State<UploadScreen> {
                   decoration: InputDecoration(
                     hintText: "Enter name",
                     filled: true,
-                    fillColor: AppColors.backgroundColor,
+                    fillColor: Theme.of(context).brightness == Brightness.dark
+                        ? const Color(0xFF1E1E1E)
+                        : AppColors.backgroundColor,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                       borderSide: BorderSide.none,

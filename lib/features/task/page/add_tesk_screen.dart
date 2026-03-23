@@ -9,7 +9,8 @@ import 'package:taskati/core/styles/text_styles.dart';
 import 'package:taskati/features/task/widgets/res_container.dart';
 
 class AddTaskScreen extends StatefulWidget {
-  const AddTaskScreen({super.key});
+  final DateTime? initialDate;
+  const AddTaskScreen({super.key, this.initialDate});
 
   @override
   State<AddTaskScreen> createState() => _AddTaskScreenState();
@@ -19,7 +20,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   final TextEditingController titleController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
 
-  DateTime selectedDate = DateTime.now();
+  late DateTime selectedDate = widget.initialDate ?? DateTime.now();
   TimeOfDay startTime = TimeOfDay.now();
   TimeOfDay endTime = TimeOfDay.now();
 
@@ -51,13 +52,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               const Gap(30),
 
               /// Title
-              const Text("Title"),
+              Text("Title",
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
               const Gap(8),
               TextField(
                 controller: titleController,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF1E1E1E)
+                      : Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide.none,
@@ -68,14 +73,18 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
               const Gap(20),
 
               /// Description
-              const Text("Description"),
+              Text("Description",
+                style: TextStyle(color: Theme.of(context).colorScheme.onSurface),
+              ),
               const Gap(8),
               TextField(
                 controller: descriptionController,
                 maxLines: 3,
                 decoration: InputDecoration(
                   filled: true,
-                  fillColor: Colors.white,
+                  fillColor: Theme.of(context).brightness == Brightness.dark
+                      ? const Color(0xFF1E1E1E)
+                      : Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(16),
                     borderSide: BorderSide.none,
